@@ -19,19 +19,19 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class AuthenticationDemoApplicationTests {
+public class AuthenticationIntegrationTest {
 
 	@Autowired
 	private TestRestTemplate testClient;
 
 	@Test
-	public void testAuthentication_noHeaderSet() {
+	public void testAuthentication_noHeaderSet_status403() {
 		ResponseEntity<String> response = testClient.getForEntity("/secure", String.class);
 		Assertions.assertThat(response.getStatusCode().value()).isEqualTo(403);
 	}
 
 	@Test
-	public void testAuthentication_validHeadersSet() {
+	public void testAuthentication_validHeadersSet_status200() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("x-user", "Marcus Held");
 		headers.add("x-password", "SuperSecret");
@@ -43,7 +43,7 @@ public class AuthenticationDemoApplicationTests {
 	}
 
 	@Test
-	public void testAuthentication_invalidHeadersSet() {
+	public void testAuthentication_invalidHeadersSet_status403() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("x-user", "Peter Parker");
 		headers.add("x-password", "HasNoAccount");
